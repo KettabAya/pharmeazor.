@@ -6,7 +6,7 @@
 
 [![CI](https://github.com/KettabAya/pharmeazor/actions/workflows/ci.yml/badge.svg)](https://github.com/KettabAya/pharmeazor/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-2DE2F0)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-102%20passing-34D399)](tests/)
+[![Tests](https://img.shields.io/badge/tests-132%20passing-34D399)](tests/)
 [![License](https://img.shields.io/badge/license-MIT-8B7BF7)](LICENSE)
 
 *Projet 2 — Module RCR, M1 IA · Université Constantine 2 Abdelhamid Mehri · Faculté NTIC · Département IFA*
@@ -109,6 +109,9 @@ L'interface est servie sur <http://localhost:8000>. `make help` liste toutes les
 | Recherche BM25 (référence) | `retrieve/bm25.py` | ✅ implémenté, testé |
 | Lecture des dosages et conditionnements | `normalize/dosage.py` | ✅ implémenté, testé |
 | Catalogue, dictionnaire des noms, équivalents | `normalize/catalogue.py` | ✅ implémenté, testé |
+| Lecture des classeurs de la nomenclature | `collect/nomenclature.py` | ✅ implémenté, testé |
+| Lecture des exports dzair-pharma | `collect/dzair.py` | ✅ implémenté, testé |
+| Comparaison des deux sources | `reconcile/crosscheck.py` | ✅ implémenté, testé |
 | Registre des sources + conformité | `collect/registry.py` | ✅ implémenté |
 | Collecte effective | `scripts/collect.py` | 🚧 semaine 1–2 |
 | Lecture PDF / OCR | `extract/` | 🚧 semaine 2 |
@@ -172,7 +175,7 @@ pharmeazor/
 │   └── reference/            # registre des sources, liste des médicaments
 ├── eval/questions.yaml       # jeu de test annoté, rejouable d'un clic
 ├── scripts/                  # collect · build_index · run_eval
-├── tests/                    # 102 tests
+├── tests/                    # 132 tests
 └── docs/                     # architecture, sources, évaluation
 ```
 

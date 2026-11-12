@@ -107,6 +107,17 @@ class Product:
     def form_family(self) -> str:
         return form_family(self.form)
 
+    # The original cell text, exposed under the same names the secondary
+    # source uses, so the two can be compared field by field without the
+    # comparison silently reading an attribute that does not exist.
+    @property
+    def strength_raw(self) -> str:
+        return self.strength.raw
+
+    @property
+    def packaging_raw(self) -> str:
+        return self.packaging.raw
+
     @property
     def equivalence_key(self) -> tuple[str, str, str]:
         """Same substance, same strength, same galenic family."""

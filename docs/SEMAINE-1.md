@@ -8,23 +8,42 @@ une fois. Passer de 3 à 50 ensuite, c'est changer une liste.
 
 ## Les trois médicaments
 
-Un par classe thérapeutique, choisis dans la nomenclature de juin 2026 :
+Trois antalgiques / anti-inflammatoires, choisis parce que ce sont les seuls
+pour lesquels nous disposons des **deux sources** : la nomenclature officielle
+*et* les exports dzair-pharma.
 
-| DCI | Classe | Produits enregistrés | Marques distinctes |
+| DCI | Produits (nomenclature) | Interactions | Ce qu'il met à l'épreuve |
 |---|---|---|---|
-| **PARACETAMOL** | antalgique / anti-inflammatoire | 143 | 89 |
-| **AMOXICILLINE** | antibiotique | 61 | 31 |
-| **AMLODIPINE** | antihypertenseur | 80 | 40 |
+| **IBUPROFENE** | 65 | 992 | la brique interactions |
+| **DICLOFENAC** | 55 | 880 | 25 formes distinctes → la normalisation des formes |
+| **PARACETAMOL** | 143 | 367 | 24 dosages distincts → le parseur de dosages |
 
-Pourquoi ceux-là : très courants, bien documentés, et chacun contient une
-difficulté différente — associations (`500MG/30MG`, `1G/125MG`, `5MG/160MG`),
-formes multiples, et une faute de frappe dans la source officielle
-(`SUSPENSSION`) qui montrera que le nettoyage sert à quelque chose.
+**Limite assumée, à écrire dans le rapport :** ces trois molécules appartiennent
+à **une seule** des trois classes thérapeutiques du projet. Les 11 fichiers JSON
+fournis sont tous des antalgiques/AINS ; il n'existe ni fichier antibiotique ni
+fichier antihypertenseur. Choisir un médicament par classe aurait donné deux
+molécules sans interactions et sans seconde source. Pour le projet final, il
+faudra des documents pour un antibiotique et un antihypertenseur.
 
-**À confirmer auprès de l'enseignant** avant de lancer la semaine : il a peut-être
-sa propre liste.
+## Ce que la comparaison des sources a montré
 
----
+Une mesure vaut mieux qu'une hypothèse. Sur les **173 produits présents dans les
+deux sources** et 7 champs comparés :
+
+- **1 seul désaccord** (`FLC COMPTE GOUTTE 05ML` contre `FL COMPTE GOUTTE 05ML`)
+- taux d'accord : **99,9 %**
+
+Deux sources indépendantes ne s'accordent jamais à ce point. En regardant les
+fichiers JSON de plus près : chaque enregistrement porte
+`"Version source": "Aout 2026"` et `"Année de nomenclature": "2026"`.
+**dzair-pharma republie la nomenclature officielle.** Ce n'est pas une source
+indépendante pour les données produit ; sa vraie valeur ajoutée, ce sont les
+interactions ANSM, que le registre officiel ne contient pas du tout.
+
+**Conséquence pour la brique « réconciliation » :** elle ne peut pas se
+démontrer entre ces deux sources. Elle se démontrera entre les **cinq versions
+datées de la nomenclature** (décembre 2025 → août 2026), qui donnent de vrais
+désaccords datables — c'est aussi l'extension « suivi des versions ».
 
 ## Ce qui est déjà fait
 

@@ -36,11 +36,20 @@ class TestFormFamily:
 
 class TestLoading:
     def test_loads_every_row(self, catalogue):
-        assert len(catalogue.products) == 284
+        # Derived from the file rather than hardcoded, so changing which
+        # molecules are extracted does not break the test.
+        import csv as _csv
 
-    def test_the_three_classes_are_present(self, catalogue):
+        with open(CSV, encoding="utf-8", newline="") as fh:
+            expected = sum(1 for _ in _csv.DictReader(fh))
+        assert len(catalogue.products) == expected
+        assert expected > 50
+
+    def test_every_product_has_a_therapeutic_class(self, catalogue):
         classes = {p.therapeutic_class for p in catalogue.products}
-        assert classes == {"antalgique_ains", "antibiotique", "antihypertenseur"}
+        assert classes
+        assert "" not in classes
+        assert classes <= {"antalgique_ains", "antibiotique", "antihypertenseur"}
 
     def test_strengths_were_parsed_for_the_vast_majority(self, catalogue):
         parsed = sum(1 for p in catalogue.products if p.strength.parsed)
