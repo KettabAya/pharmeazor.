@@ -8,42 +8,46 @@ une fois. Passer de 3 à 50 ensuite, c'est changer une liste.
 
 ## Les trois médicaments
 
-Trois antalgiques / anti-inflammatoires, choisis parce que ce sont les seuls
-pour lesquels nous disposons des **deux sources** : la nomenclature officielle
-*et* les exports dzair-pharma.
+Un par classe thérapeutique, comme le demande le cahier des charges :
 
-| DCI | Produits (nomenclature) | Interactions | Ce qu'il met à l'épreuve |
-|---|---|---|---|
-| **IBUPROFENE** | 65 | 992 | la brique interactions |
-| **DICLOFENAC** | 55 | 880 | 25 formes distinctes → la normalisation des formes |
-| **PARACETAMOL** | 143 | 367 | 24 dosages distincts → le parseur de dosages |
+| DCI | Classe | Produits | Marques | Données dzair |
+|---|---|---|---|---|
+| **PARACETAMOL** | antalgique / anti-inflammatoire | 143 | 89 | ✅ 60 produits, 367 interactions |
+| **AMOXICILLINE** | antibiotique | 61 | 31 | ❌ aucune |
+| **AMLODIPINE** | antihypertenseur | 80 | 40 | ❌ aucune |
 
-**Limite assumée, à écrire dans le rapport :** ces trois molécules appartiennent
-à **une seule** des trois classes thérapeutiques du projet. Les 11 fichiers JSON
-fournis sont tous des antalgiques/AINS ; il n'existe ni fichier antibiotique ni
-fichier antihypertenseur. Choisir un médicament par classe aurait donné deux
-molécules sans interactions et sans seconde source. Pour le projet final, il
-faudra des documents pour un antibiotique et un antihypertenseur.
+Le script le signale à chaque exécution : deux des trois molécules n'ont
+**qu'une seule source**. Pour elles, pas d'interactions, pas de RCP officiel,
+et rien à réconcilier.
+
+**Ce qu'il faut obtenir en priorité :** les exports dzair-pharma pour
+`amoxicilline` et `amlodipine`, au même format que les onze fichiers déjà
+fournis. Celui qui a produit les premiers peut produire ceux-là. Sans eux, la
+chaîne complète n'est démontrable que sur le paracétamol.
+
+Pour changer de molécules sans toucher au code :
+
+```bash
+python scripts/build_week1.py --inn PARACETAMOL IBUPROFENE DICLOFENAC
+```
 
 ## Ce que la comparaison des sources a montré
 
-Une mesure vaut mieux qu'une hypothèse. Sur les **173 produits présents dans les
-deux sources** et 7 champs comparés :
+Une mesure vaut mieux qu'une hypothèse. Sur les produits présents dans les deux
+sources, le taux d'accord champ par champ dépasse **99,9 %** : un seul désaccord
+sur plus de mille comparaisons, et encore s'agissait-il d'une abréviation
+(`FLC` contre `FL`).
 
-- **1 seul désaccord** (`FLC COMPTE GOUTTE 05ML` contre `FL COMPTE GOUTTE 05ML`)
-- taux d'accord : **99,9 %**
+Deux sources indépendantes ne s'accordent jamais à ce point. Vérification faite,
+chaque enregistrement dzair porte `"Version source": "Aout 2026"` et
+`"Année de nomenclature": "2026"` : **dzair-pharma republie la nomenclature
+officielle.** Ce n'est pas une source indépendante pour les données produit ; sa
+vraie valeur ajoutée, ce sont les interactions ANSM, absentes du registre.
 
-Deux sources indépendantes ne s'accordent jamais à ce point. En regardant les
-fichiers JSON de plus près : chaque enregistrement porte
-`"Version source": "Aout 2026"` et `"Année de nomenclature": "2026"`.
-**dzair-pharma republie la nomenclature officielle.** Ce n'est pas une source
-indépendante pour les données produit ; sa vraie valeur ajoutée, ce sont les
-interactions ANSM, que le registre officiel ne contient pas du tout.
-
-**Conséquence pour la brique « réconciliation » :** elle ne peut pas se
-démontrer entre ces deux sources. Elle se démontrera entre les **cinq versions
-datées de la nomenclature** (décembre 2025 → août 2026), qui donnent de vrais
-désaccords datables — c'est aussi l'extension « suivi des versions ».
+**Conséquence pour la brique « réconciliation » :** elle ne se démontrera pas
+entre ces deux sources, mais entre les **cinq versions datées de la
+nomenclature** (décembre 2025 → août 2026), qui donnent de vrais désaccords
+datables. C'est aussi l'extension « suivi des versions ».
 
 ## Ce qui est déjà fait
 

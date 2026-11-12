@@ -32,10 +32,19 @@ from pharmeazor.collect.nomenclature import read_workbook  # noqa: E402
 from pharmeazor.normalize.catalogue import Catalogue  # noqa: E402
 from pharmeazor.reconcile.crosscheck import compare_all  # noqa: E402
 
-# The three starter molecules, chosen for what they each stress:
-# ibuprofene -> interactions, diclofenac -> galenic forms, paracetamol -> dosages.
-TARGET_INN: tuple[str, ...] = ("IBUPROFENE", "DICLOFENAC", "PARACETAMOL")
-THERAPEUTIC_CLASS = "antalgique_ains"
+# The three starter molecules: one per therapeutic class, as the spec asks.
+# Override on the command line with --inn.
+TARGET_INN: tuple[str, ...] = ("PARACETAMOL", "AMOXICILLINE", "AMLODIPINE")
+
+# Which class each INN belongs to. Anything unlisted is reported rather than
+# silently filed under a default.
+CLASS_OF: dict[str, str] = {
+    "PARACETAMOL": "antalgique_ains",
+    "IBUPROFENE": "antalgique_ains",
+    "DICLOFENAC": "antalgique_ains",
+    "AMOXICILLINE": "antibiotique",
+    "AMLODIPINE": "antihypertenseur",
+}
 
 RAW_XLSX = ROOT / "data" / "raw" / "nomenclature"
 RAW_JSON = ROOT / "data" / "raw" / "dzair"
@@ -55,12 +64,20 @@ PRODUCT_FIELDS = [
 ]
 
 
-def targeted(inn: str) -> bool:
+def targeted(inn: str, targets: tuple[str, ...]) -> bool:
     upper = (inn or "").upper()
-    return any(upper.startswith(t) for t in TARGET_INN)
+    return any(upper.startswith(t) for t in targets)
 
 
-def extract_nomenclature() -> list[dict]:
+def therapeutic_class(inn: str) -> str:
+    upper = (inn or "").upper()
+    for prefix, klass in CLASS_OF.items():
+        if upper.startswith(prefix):
+            return klass
+    return "non_classe"
+
+
+def extract_nomenclature(targets: tuple[str, ...]) -> list[dict]:
     """Read every workbook in data/raw/nomenclature and keep the three INNs."""
     books = sorted(RAW_XLSX.glob("*.xlsx"))
     if not books:
@@ -72,11 +89,11 @@ def extract_nomenclature() -> list[dict]:
     rows: list[dict] = []
     for book in books:
         for row in read_workbook(book, sheets={"nomenclature"}):
-            if not targeted(row.inn):
+            if not targeted(row.inn, targets):
                 continue
             rows.append({
                 "drug_id": f"DZ-{len(rows) + 1:04d}",
-                "therapeutic_class": THERAPEUTIC_CLASS,
+                "therapeutic_class": therapeutic_class(row.inn),
                 "inn": row.inn,
                 "brand_name": row.brand_name,
                 "code": row.code,
@@ -208,21 +225,34 @@ def show_answer(catalogue: Catalogue, name: str) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Livrables de la semaine 1.")
     parser.add_argument("--question", help="Nom de marque pour l'exemple travaillé.")
+    parser.add_argument(
+        "--inn", nargs="+", default=list(TARGET_INN),
+        help="DCI à retenir (par défaut : une par classe thérapeutique).",
+    )
     args = parser.parse_args()
+    targets = tuple(x.upper() for x in args.inn)
 
-    print(f"Molécules retenues : {', '.join(TARGET_INN)}\n")
+    print(f"Molécules retenues : {', '.join(targets)}\n")
 
-    rows = extract_nomenclature()
+    rows = extract_nomenclature(targets)
     print(f"[1] Nomenclature officielle : {len(rows)} produits -> {PRODUCTS.name}")
-    for inn in TARGET_INN:
+    for inn in targets:
         n = sum(1 for r in rows if r["inn"].upper().startswith(inn))
-        print(f"      {inn:<14} {n:>4}")
+        klass = therapeutic_class(inn)
+        print(f"      {inn:<14} {n:>4}   ({klass})")
 
-    dzair = load_directory(RAW_JSON, only_inn=set(TARGET_INN))
+    dzair = load_directory(RAW_JSON, only_inn=set(targets))
+    covered = {inn for inn in targets
+               if any(p.inn.upper().startswith(inn) for p in dzair)}
+    missing = [inn for inn in targets if inn not in covered]
     n_inter = sum(len(p.interactions) for p in dzair)
     n_rcp = sum(1 for p in dzair if p.has_official_leaflet)
     print(f"\n[2] dzair-pharma (secondaire) : {len(dzair)} produits, "
           f"{n_inter} interactions, {n_rcp} lien(s) RCP officiel")
+    if missing:
+        print(f"      ATTENTION — aucune donnée dzair pour : {', '.join(missing)}")
+        print("      Ces molécules n'ont qu'une seule source : pas d'interactions,")
+        print("      pas de RCP officiel, et rien à réconcilier.")
 
     catalogue = Catalogue.from_csv(PRODUCTS)
     unparsed = [p for p in catalogue.products if not p.strength.parsed]
