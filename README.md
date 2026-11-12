@@ -64,8 +64,16 @@ Le chatbot n'est que la dernière brique. L'essentiel du travail est **en amont*
 git clone https://github.com/KettabAya/pharmeazor.git
 cd pharmeazor
 python -m venv .venv && source .venv/bin/activate   # Windows : .venv\Scripts\activate
-pip install -e ".[dev]"
+pip install -r requirements.lock.txt
+pip install -e . --no-deps
 ```
+
+> **Toute l'équipe installe depuis `requirements.lock.txt`**, qui fige les
+> versions exactes. `requirements.txt` dit *quelles* bibliothèques ; le fichier
+> `.lock` dit *quelle version*. Sans lui, deux personnes qui installent à une
+> semaine d'intervalle n'exécutent pas le même code, et un bug chez l'un
+> n'existe pas chez l'autre. Après tout ajout de dépendance, régénérez-le et
+> commitez-le.
 
 Configurer sa clé — **chaque membre crée la sienne**, gratuitement, dans Google AI Studio :
 
