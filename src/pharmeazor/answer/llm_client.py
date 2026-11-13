@@ -12,10 +12,11 @@ PROCESSED_DIR = REPO_ROOT / "data" / "processed"
 PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 CACHE_FILE = PROCESSED_DIR / "cache.json"
 COUNTER_FILE = PROCESSED_DIR / "call_counter.json"
-# Modele impose a toutes les equipes. openai/gpt-oss-20b est le modele de
-# SECOURS, a n'utiliser que sur annonce explicite de l'enseignant : le
-# surcharger passe par PHARMEAZOR_MODEL dans .env, pas par ce fichier.
-MODEL_NAME = os.getenv("PHARMEAZOR_MODEL", "openai/gpt-oss-120b")
+# Modele utilise par l'equipe. L'annonce du module designe
+# openai/gpt-oss-120b comme modele commun et openai/gpt-oss-20b comme
+# modele de secours ; l'equipe retient le 20b. Pour revenir au 120b,
+# changer PHARMEAZOR_MODEL dans .env -- inutile de toucher a ce fichier.
+MODEL_NAME = os.getenv("PHARMEAZOR_MODEL", "openai/gpt-oss-20b")
 BASE_URL = "https://api.groq.com/openai/v1"
 
 

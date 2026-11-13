@@ -35,7 +35,7 @@ class Settings:
     """All tunables in one place, so experiments stay reproducible."""
 
     # --- model (imposed by the module; same for every team) -----------------
-    model_name: str = field(default_factory=lambda: os.getenv("PHARMEAZOR_MODEL", "openai/gpt-oss-120b"))
+    model_name: str = field(default_factory=lambda: os.getenv("PHARMEAZOR_MODEL", "openai/gpt-oss-20b"))
     api_key: str = field(default_factory=lambda: os.getenv("GROQ_API_KEY", ""))
 
     # --- paths --------------------------------------------------------------
