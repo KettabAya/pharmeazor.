@@ -119,6 +119,20 @@ n° 003/13 G 181/13/24 » ne permet plus de savoir duquel on parle — ce qui
 touche directement la règle d'or du projet, puisque toute réponse doit citer sa
 source de façon vérifiable.
 
+**Vérification — l'anomalie vient bien de la source, pas de notre traitement.**
+Recherche du numéro dans le classeur d'origine :
+
+```
+feuille « Nomenclature Juin 2026 »
+  ligne 3113 : n° séquentiel 3099 | 003/13 G 181/13/24 | CLAMOXYPEN ENFANTS
+  ligne 3114 : n° séquentiel 3100 | 003/13 G 181/13/24 | CLAMOXYPEN NOURISSONS
+```
+
+Deux points l'établissent : le doublon est présent dans le fichier du ministère
+avant toute transformation de notre part, et le ministère lui-même numérote ces
+lignes 3099 et 3100 — deux enregistrements distincts dans sa propre
+numérotation, portant pourtant le même numéro d'enregistrement.
+
 **Décision — rien n'est supprimé.** Les deux produits existent réellement. Nous
 utilisons le couple `numéro + nom de marque` comme identifiant, et nous
 signalons l'incohérence sans la corriger : décider quel numéro aurait dû être
