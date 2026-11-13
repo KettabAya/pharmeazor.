@@ -35,8 +35,8 @@ class Settings:
     """All tunables in one place, so experiments stay reproducible."""
 
     # --- model (imposed by the module; same for every team) -----------------
-    model_name: str = field(default_factory=lambda: os.getenv("PHARMEAZOR_MODEL", ""))
-    api_key: str = field(default_factory=lambda: os.getenv("GOOGLE_API_KEY", ""))
+    model_name: str = field(default_factory=lambda: os.getenv("PHARMEAZOR_MODEL", "openai/gpt-oss-120b"))
+    api_key: str = field(default_factory=lambda: os.getenv("GROQ_API_KEY", ""))
 
     # --- paths --------------------------------------------------------------
     raw_dir: Path = DATA / "raw"
@@ -59,8 +59,8 @@ class Settings:
     def require_api_key(self) -> str:
         if not self.api_key:
             raise RuntimeError(
-                "GOOGLE_API_KEY is not set. Copy .env.example to .env and add "
-                "your own free key from Google AI Studio. Never commit it."
+                "GROQ_API_KEY is not set. Copy .env.example to .env and add "
+                "your own free key from console.groq.com. Never commit it."
             )
         return self.api_key
 

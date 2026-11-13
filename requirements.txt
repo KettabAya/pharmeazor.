@@ -16,6 +16,9 @@ pdfplumber>=0.11
 # Name matching
 rapidfuzz>=3.9
 
+# Modele de langage impose (Groq, API compatible OpenAI)
+openai>=1.40
+
 # Optional extras live in pyproject.toml:
 #   pip install -e ".[dense]"  -> sentence-transformers + faiss
 #   pip install -e ".[ocr]"    -> pytesseract (scanned leaflets, incl. Arabic)

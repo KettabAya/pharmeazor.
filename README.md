@@ -75,10 +75,11 @@ pip install -e . --no-deps
 > n'existe pas chez l'autre. Après tout ajout de dépendance, régénérez-le et
 > commitez-le.
 
-Configurer sa clé — **chaque membre crée la sienne**, gratuitement, dans Google AI Studio :
+Configurer sa clé — **chaque membre crée la sienne**, gratuitement, sur
+[console.groq.com/keys](https://console.groq.com/keys) :
 
 ```bash
-cp .env.example .env    # puis remplir GOOGLE_API_KEY et PHARMEAZOR_MODEL
+cp .env.example .env    # puis remplir GROQ_API_KEY
 ```
 
 `.env` est ignoré par git. Une clé ne part **jamais** dans le dépôt ni dans le rapport.

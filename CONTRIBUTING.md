@@ -71,7 +71,7 @@ externe : la suite doit tourner sur une machine nue, avec seulement pytest insta
 ## Secrets
 
 `.env` est ignoré par git et doit le rester. Chaque membre crée sa propre clé gratuite
-dans Google AI Studio. Une clé qui finit dans un commit est révoquée immédiatement, même
+sur console.groq.com. Une clé qui finit dans un commit est révoquée immédiatement, même
 si le commit est réécrit ensuite — l'historique a déjà été poussé.
 
 ## Répartition du travail
