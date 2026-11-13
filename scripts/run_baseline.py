@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+
 from pharmeazor.answer.llm_client import ask_llm, get_call_count
 
 PROMPT = "Quelle est la DCI de DOLIPRANE ?"
