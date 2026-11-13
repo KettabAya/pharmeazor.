@@ -211,6 +211,7 @@ Le système aide à **retrouver et contrôler** l'information. La décision rest
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — les choix techniques et pourquoi
 - [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) — registre des sources, `robots.txt` et CGU consignés
+- [`docs/JOURNAL-TRAITEMENT.md`](docs/JOURNAL-TRAITEMENT.md) — ce que l'examen des sources a révélé, avec la mesure et la décision
 - [`docs/EVALUATION.md`](docs/EVALUATION.md) — protocole et résultats chiffrés
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — conventions de branche, de commit et de revue
 
