@@ -26,6 +26,9 @@ env/
 .coverage
 htmlcov/
 
+# --- rapport genere, reconstruit par scripts/faire_pdf.py ---
+RAPPORT-PHARMEAZOR.html
+
 # --- jupyter ---
 .ipynb_checkpoints/
 Untitled*.ipynb

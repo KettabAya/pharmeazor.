@@ -1,11 +1,13 @@
-# Rapport — Semaine 1
+# Rapport — Semaine 1 · Partie « données structurées »
 
 **Pharmeazor** · Projet 2, module RCR, M1 IA
 Université Constantine 2 Abdelhamid Mehri — Faculté NTIC, Département IFA
 Vendredi 13 novembre 2026
 
-Partie « données structurées » : collecte, nettoyage et normalisation de la
-nomenclature nationale.
+**Périmètre de ce rapport.** Il ne couvre que la moitié « données structurées »
+du projet : collecte, nettoyage et normalisation de la nomenclature nationale.
+La partie documentaire — notices, RCP, extraction des rubriques — fait l'objet
+d'un travail distinct et n'est pas traitée ici.
 
 ---
 
