@@ -27,6 +27,16 @@ def _load_api_key() -> str:
     except ImportError:
         pass
 
+    try:
+        from kaggle_secrets import UserSecretsClient
+
+        key = UserSecretsClient().get_secret("GROQ_API_KEY")
+        if key:
+            print(f"[llm_client] key loaded from Kaggle (ends ...{key[-4:]})")
+            return key
+    except (ImportError, Exception):
+        pass
+
     key = os.environ.get("GROQ_API_KEY")
     if not key:
         raise RuntimeError("GROQ_API_KEY not found.")
