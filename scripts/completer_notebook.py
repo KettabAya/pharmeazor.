@@ -21,13 +21,13 @@ NOTEBOOK = ROOT / "preprocessing.ipynb"
 
 def md(id_: str, *lignes: str) -> dict:
     return {"cell_type": "markdown", "id": id_, "metadata": {},
-            "source": [l + "\n" for l in lignes]}
+            "source": [ligne + "\n" for ligne in lignes]}
 
 
 def code(id_: str, *lignes: str) -> dict:
     return {"cell_type": "code", "id": id_, "metadata": {},
             "execution_count": None, "outputs": [],
-            "source": [l + "\n" for l in lignes]}
+            "source": [ligne + "\n" for ligne in lignes]}
 
 
 def main() -> int:
