@@ -61,6 +61,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Tester le modele seul.")
     parser.add_argument("--sans-cache", action="store_true",
                         help="Forcer un nouvel appel au lieu de relire le cache.")
+    parser.add_argument("--repetitions", type=int, default=3,
+                        help="Nombre de fois ou la meme question est posee (3).")
     args = parser.parse_args()
 
     try:
@@ -78,17 +80,30 @@ def main() -> int:
     for ligne in QUESTION.splitlines():
         print(f"  {ligne}")
 
-    print("\nappel en cours...\n")
-    reponse = ask_llm(QUESTION, use_cache=not args.sans_cache)
+    # La meme question, plusieurs fois. Un modele interroge deux fois ne donne
+    # pas forcement deux fois la meme reponse : c'est en soi un resultat, et il
+    # ne coute que deux appels de plus. L'idee vient du binome.
+    print()
+    reponses: list[str] = []
+    for i in range(max(1, args.repetitions)):
+        print(f"appel {i + 1}/{args.repetitions}...")
+        sans_cache = True if args.repetitions > 1 else args.sans_cache
+        r = ask_llm(QUESTION, use_cache=not sans_cache)
+        if r.startswith("ERROR:"):
+            print(r)
+            print("\nVerifiez que GROQ_API_KEY est defini (voir .env.example).")
+            return 1
+        reponses.append(r)
 
-    if reponse.startswith("ERROR:"):
-        print(reponse)
-        print("\nVerifiez que GROQ_API_KEY est defini (voir .env.example).")
-        return 1
-
+    identiques = len({r.strip() for r in reponses}) == 1
+    for i, r in enumerate(reponses, 1):
+        print("-" * 66)
+        print(f"REPONSE {i}")
+        print("-" * 66)
+        print(r)
     print("-" * 66)
-    print(reponse)
-    print("-" * 66)
+    print(f"\nles {len(reponses)} reponses sont "
+          f"{'IDENTIQUES' if identiques else 'DIFFERENTES entre elles'}")
     print(f"\nappels au modele depuis le debut du projet : {get_call_count()}")
 
     aujourdhui = dt.date.today()
@@ -106,12 +121,21 @@ def main() -> int:
         "",
         "> " + QUESTION.replace("\n\n", "\n>\n> ").replace("\n", "\n> "),
         "",
-        "## La réponse du modèle, telle quelle",
+        f"- **Répétitions** : {len(reponses)} (même question, sans cache)",
+        f"- **Les réponses sont** : "
+        f"{'identiques' if identiques else '**différentes entre elles**'}",
         "",
-        "```",
-        reponse.strip(),
-        "```",
+        "## Les réponses du modèle, telles quelles",
         "",
+        "La même question posée plusieurs fois. Si les réponses diffèrent, c'est",
+        "déjà un résultat : un système sur lequel on fonde une décision",
+        "pharmaceutique ne peut pas changer d'avis d'un appel à l'autre.",
+        "",
+    ] + [
+        ligne
+        for i, r in enumerate(reponses, 1)
+        for ligne in (f"### Réponse {i}", "", "```", r.strip(), "```", "")
+    ] + [
         "## Grille d'annotation",
         "",
         "À remplir **en vérifiant chaque point dans la nomenclature**. Une réponse",
