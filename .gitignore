@@ -24,6 +24,10 @@ env/
 .coverage
 htmlcov/
 
+# --- jupyter ---
+.ipynb_checkpoints/
+Untitled*.ipynb
+
 # --- editors / OS ---
 .idea/
 .vscode/
