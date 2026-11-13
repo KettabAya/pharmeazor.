@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 import hashlib
 import json
 import os
 from pathlib import Path
+
 from openai import OpenAI
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -13,9 +15,11 @@ COUNTER_FILE = PROCESSED_DIR / "call_counter.json"
 MODEL_NAME = "openai/gpt-oss-20b"
 BASE_URL = "https://api.groq.com/openai/v1"
 
+
 def _load_api_key() -> str:
     try:
-        from google.colab import userdata  
+        from google.colab import userdata
+
         key = userdata.get("GROQ_API_KEY")
         if key:
             print(f"[llm_client] key loaded (ends ...{key[-4:]})")
@@ -25,9 +29,7 @@ def _load_api_key() -> str:
 
     key = os.environ.get("GROQ_API_KEY")
     if not key:
-        raise RuntimeError(
-            "GROQ_API_KEY not found."
-        )
+        raise RuntimeError("GROQ_API_KEY not found.")
     print(f"[llm_client] key loaded from env (ends ...{key[-4:]})")
     return key
 
@@ -90,5 +92,5 @@ def get_call_count() -> int:
 
 if __name__ == "__main__":
     print(ask_llm("What is the capital of Algeria?"))
-    print(ask_llm("What is the capital of Algeria?"))   
+    print(ask_llm("What is the capital of Algeria?"))
     print(f"Total API calls: {get_call_count()}")
