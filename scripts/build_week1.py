@@ -69,6 +69,29 @@ def targeted(inn: str, targets: tuple[str, ...]) -> bool:
     return any(upper.startswith(t) for t in targets)
 
 
+def normaliser_texte(valeur: str) -> str:
+    """Espaces de bord retires, espaces internes ramenes a un seul.
+
+    Ne touche ni a la casse ni au contenu : une marque reste telle qu'elle est
+    ecrite dans la source, car c'est elle qu'on citera.
+    """
+    return " ".join(str(valeur or "").split())
+
+
+def normaliser_liste(valeur: str) -> str:
+    """Uniformiser la colonne LISTE.
+
+    La source ecrit la meme categorie reglementaire de deux facons --
+    « LISTE I » et « Liste I » -- ce qui produirait deux categories distinctes
+    au moment de regrouper. La mise en majuscules uniformise la forme sans
+    toucher au sens : les deux graphies designent la meme chose.
+
+    Une case vide reste vide. Elle signifie « hors liste », c'est-a-dire vendu
+    sans ordonnance, et la remplir inventerait une contrainte reglementaire.
+    """
+    return normaliser_texte(valeur).upper()
+
+
 def therapeutic_class(inn: str) -> str:
     upper = (inn or "").upper()
     for prefix, klass in CLASS_OF.items():
@@ -86,6 +109,15 @@ def extract_nomenclature(targets: tuple[str, ...]) -> list[dict]:
             "(voir docs/SEMAINE-1.md, etape 0.2)."
         )
 
+    # Le dossier contient plusieurs versions datees du registre. La table
+    # produit decrit l'etat ACTUEL, donc une seule version : la plus recente,
+    # que le tri par nom de fichier (nomenclature_AAAA-MM) place en dernier.
+    # Les versions anterieures servent a scripts/comparer_versions.py, qui
+    # mesure ce qui a change entre deux publications.
+    books = [books[-1]]
+    print(f"  version retenue : {books[0].stem.replace('nomenclature_', '')}"
+          f"  (la plus recente des {len(sorted(RAW_XLSX.glob('*.xlsx')))} disponibles)")
+
     rows: list[dict] = []
     for book in books:
         for row in read_workbook(book, sheets={"nomenclature"}):
@@ -94,16 +126,16 @@ def extract_nomenclature(targets: tuple[str, ...]) -> list[dict]:
             rows.append({
                 "drug_id": f"DZ-{len(rows) + 1:04d}",
                 "therapeutic_class": therapeutic_class(row.inn),
-                "inn": row.inn,
-                "brand_name": row.brand_name,
+                "inn": normaliser_texte(row.inn),
+                "brand_name": normaliser_texte(row.brand_name),
                 "code": row.code,
                 "registration_no": row.registration_no,
-                "form": row.form,
+                "form": normaliser_texte(row.form),
                 "strength_raw": row.strength_raw,
                 "packaging_raw": row.packaging_raw,
-                "list_class": row.list_class,
-                "lab_name": row.lab_name,
-                "lab_country": row.lab_country,
+                "list_class": normaliser_liste(row.list_class),
+                "lab_name": normaliser_texte(row.lab_name),
+                "lab_country": normaliser_texte(row.lab_country),
                 "date_initial": row.date_initial,
                 "date_final": row.date_final,
                 "type_code": row.type_code,
