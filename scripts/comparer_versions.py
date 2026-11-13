@@ -76,7 +76,9 @@ def comparer(versions: dict[str, dict]) -> tuple[list[dict], Counter, list[dict]
     mouvements: list[dict] = []
     par_champ: Counter = Counter()
 
-    for avant, apres in zip(noms, noms[1:]):
+    # strict=False volontaire : noms[1:] est plus court d'un element,
+    # puisqu'on apparie chaque version avec la suivante.
+    for avant, apres in zip(noms, noms[1:], strict=False):
         va, vb = versions[avant], versions[apres]
         communs = va.keys() & vb.keys()
 
