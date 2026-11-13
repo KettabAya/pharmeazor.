@@ -100,7 +100,7 @@ Encadrant : Pr. BOURAMOUL<br>
     sommaire.append("</ol></div>")
     morceaux.append("".join(sommaire))
 
-    for chemin, titre in presents:
+    for chemin, _titre in presents:
         texte = (ROOT / chemin).read_text(encoding="utf-8")
         md.reset()
         corps = md.convert(texte)
