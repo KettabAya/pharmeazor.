@@ -48,8 +48,28 @@ _COMPONENT_RE = re.compile(
     rf"^\s*(?P<value>{_NUMBER})\s*(?P<unit>[A-Za-zµ%]+)?\s*\**\s*$"
 )
 
-# "B/16", "BTE/20", "B /10"
-_PACK_COUNT_RE = re.compile(r"^\s*B\s*(?:TE|OITE)?\s*/\s*(?P<count>\d+)\s*$", re.I)
+# Mots designant un contenant dont le nombre qui suit est un nombre d'UNITES.
+# Mesure sur les 5 423 conditionnements de la nomenclature d'aout 2026 : la
+# seule forme "B/N" couvre 53,1 %. Y ajouter les autres contenants et le mot
+# d'unite facultatif qui suit porte la couverture a 56,1 %, soit 159 produits.
+_CONTENANTS = r"B|BTE|BOITE|PILULIER|PLQ|PLAQUETTE"
+
+# Mots d'unite denombrable toleres apres le nombre : "B/30 SACHETS" vaut 30.
+# Un poids ou un volume ne figure PAS ici : "T/15G" est 15 grammes de pommade,
+# pas 15 unites, et "FL/5ML" un flacon de 5 ml.
+_DENOMBRABLES = (
+    r"SACHETS?|COMPRIMES?|CP|GELULES?|CAPSULES?|SUPPOSITOIRES?|OVULES?"
+    r"|AMPOULES?|AMP|PILULES?|STICKS?|DOSES?|UNITES?"
+)
+
+# "B/16", "BTE/20", "BOITE DE 30", "PILULIER/30", "B/30 SACHETS", "B/30SACHETS".
+# Le $ final est essentiel : il fait echouer "B/30 ET B/90", ou deux tailles de
+# boite coexistent et ou choisir serait inventer.
+_PACK_COUNT_RE = re.compile(
+    rf"^\s*(?:{_CONTENANTS})\s*(?:/|\s+DE\s+)\s*(?P<count>\d+)"
+    rf"\s*(?:{_DENOMBRABLES})?\s*$",
+    re.I,
+)
 # "B/FL 15 ML", "B/ FL. 60ML"
 _PACK_VOLUME_RE = re.compile(
     r"^\s*B\s*(?:TE|OITE)?\s*/\s*(?P<container>FL|FLACON|TUBE|SACHET|AMP|AMPOULE)\.?\s*"

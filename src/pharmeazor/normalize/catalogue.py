@@ -25,6 +25,7 @@ from pathlib import Path
 from ..schemas import Authority, Provenance
 from .dosage import Packaging, Strength, parse_packaging, parse_strength
 from .names import DrugEntry, normalize
+from .substance import Substance, parse_inn
 
 __all__ = [
     "Product",
@@ -119,9 +120,22 @@ class Product:
         return self.packaging.raw
 
     @property
+    def substance(self) -> Substance:
+        """La DCI decoupee : base, forme saline, substances associees."""
+        return parse_inn(self.inn)
+
+    @property
     def equivalence_key(self) -> tuple[str, str, str]:
-        """Same substance, same strength, same galenic family."""
-        return (normalize(self.inn), self.strength.canonical(), self.form_family)
+        """Meme substance, meme dosage, meme famille galenique.
+
+        La substance est comparee sur sa cle decoupee et non sur le texte brut :
+        « AMOXICILLINE TRIHYDRATEE EXPRIME EN AMOXICILLINE » et « AMOXICILLINE
+        SOUS FORME TRIHYDRATEE » designent le meme produit. En revanche une
+        association ne se confond jamais avec la substance seule -- rapprocher
+        paracetamol et paracetamol/codeine ferait disparaitre un opiace.
+        """
+        return (self.substance.cle() or normalize(self.inn),
+                self.strength.canonical(), self.form_family)
 
     def label(self) -> str:
         return f"{self.brand_name} {self.strength} {self.form}".strip()
