@@ -212,6 +212,7 @@ Le système aide à **retrouver et contrôler** l'information. La décision rest
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — les choix techniques et pourquoi
 - [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) — registre des sources, `robots.txt` et CGU consignés
+- [`docs/RAPPORT-SEMAINE-1.md`](docs/RAPPORT-SEMAINE-1.md) — **le rapport complet** : ce qui a été trouvé, comment c'est traité, les chiffres
 - [`docs/MISSION.md`](docs/MISSION.md) — la mission, la question-test et le protocole du test du modèle seul
 - [`docs/JOURNAL-TRAITEMENT.md`](docs/JOURNAL-TRAITEMENT.md) — ce que l'examen des sources a révélé, avec la mesure et la décision
 - [`docs/EVALUATION.md`](docs/EVALUATION.md) — protocole et résultats chiffrés
