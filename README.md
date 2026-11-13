@@ -216,6 +216,7 @@ Le système aide à **retrouver et contrôler** l'information. La décision rest
 - [`docs/MISSION.md`](docs/MISSION.md) — la mission, la question-test et le protocole du test du modèle seul
 - [`docs/JOURNAL-TRAITEMENT.md`](docs/JOURNAL-TRAITEMENT.md) — ce que l'examen des sources a révélé, avec la mesure et la décision
 - [`docs/EVALUATION.md`](docs/EVALUATION.md) — protocole et résultats chiffrés
+- [`docs/SEMAINE-2.md`](docs/SEMAINE-2.md) — le plan de la semaine 2 : recherche par le sens
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — conventions de branche, de commit et de revue
 
 ---
